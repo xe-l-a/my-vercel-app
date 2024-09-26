@@ -5,7 +5,7 @@ const MONGO_URI = process.env.MONGO_URI; // Conexión a MongoDB
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const client = new MongoClient(MONGO_URI);
+    const client = new MongoClient(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
     try {
       await client.connect();
