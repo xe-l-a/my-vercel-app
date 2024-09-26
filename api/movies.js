@@ -1,7 +1,10 @@
 // api/movies.js
 import { MongoClient } from 'mongodb';
+import ejs from 'ejs';
+import fs from 'fs';
+import path from 'path';
 
-const MONGO_URI = process.env.MONGO_URI; // Conexión a MongoDB
+const MONGO_URI = process.env.MONGO_URI;
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -9,9 +12,16 @@ export default async function handler(req, res) {
 
     try {
       await client.connect();
-      const db = client.db('sample_mflix'); // Base de datos
-      const movies = await db.collection('movies').find().limit(10).toArray(); // Obtiene las primeras 10 películas
-      res.status(200).json(movies); // Responde con los datos
+      const db = client.db('sample_mflix');
+      const movies = await db.collection('movies').find().limit(10).toArray();
+
+      // Leer el archivo EJS y renderizarlo
+      const filePath = path.join(process.cwd(), 'views', 'index.ejs');
+      const template = fs.readFileSync(filePath, 'utf-8');
+      const html = ejs.render(template, { movies }); // Pasar datos a la plantilla
+
+      res.setHeader('Content-Type', 'text/html');
+      res.status(200).send(html);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Unable to fetch movies' });

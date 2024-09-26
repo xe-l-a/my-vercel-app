@@ -8,22 +8,10 @@
 </head>
 <body>
     <h1>Lista de Películas</h1>
-    <ul id="movie-list"></ul>
-
-    <script>
-        async function fetchMovies() {
-            const response = await fetch('/api/movies');
-            const movies = await response.json();
-            const movieList = document.getElementById('movie-list');
-
-            movies.forEach(movie => {
-                const li = document.createElement('li');
-                li.textContent = movie.title; // Suponiendo que la colección tiene un campo "title"
-                movieList.appendChild(li);
-            });
-        }
-
-        fetchMovies();
-    </script>
+    <ul id="movie-list">
+        <% movies.forEach(movie => { %>
+            <li><%= movie.title %></li>
+        <% }); %>
+    </ul>
 </body>
 </html>
